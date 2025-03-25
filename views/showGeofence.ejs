@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geofence List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <% if (messages.success && messages.success.length > 0) { %>
+      <div class="alert alert-success"><%= messages.success[0] %></div>
+      <% } %> <% if (messages.error && messages.error.length > 0) { %>
+      <div class="alert alert-danger"><%= messages.error[0] %></div>
+      <% } %>
+      <h1 class="mb-4">Geofence List</h1>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Latitude1</th>
+            <th>Longitude1</th>
+            <th>Latitude2</th>
+            <th>Longitude2</th>
+            <th>Latitude3</th>
+            <th>Longitude3</th>
+            <th>Latitude4</th>
+            <th>Longitude4</th>
+            <th>Charges</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (geofences.length > 0) { %> <% geofences.forEach(geofence => {
+          %>
+          <tr>
+            <td><%= geofence.id %></td>
+            <td><%= geofence.name %></td>
+            <td><%= geofence.lat1 %></td>
+            <td><%= geofence.lon1 %></td>
+            <td><%= geofence.lat2 %></td>
+            <td><%= geofence.lon2 %></td>
+            <td><%= geofence.lat3 %></td>
+            <td><%= geofence.lon3 %></td>
+            <td><%= geofence.lat4 %></td>
+            <td><%= geofence.lon4 %></td>
+            <td><%= geofence.charges %></td>
+            <td><%= geofence.created_at %></td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td colspan="12" class="text-center">No geofences found</td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <a href="/geofence/add" class="btn btn-primary">Add Geofence</a>
+    </div>
+  </body>
+</html>

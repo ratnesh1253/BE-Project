@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Geofence</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container p-5 row">
+      <div class="col-4"></div>
+      <div class="col-8">
+        <h1 class="mb-4">Add Geofence</h1>
+        <form action="/geofence/add" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Geofence Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+          </div>
+
+          <!-- Coordinates for the Geofence -->
+          <h4>Coordinates</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="lat1" class="form-label">Latitude 1</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lat1"
+                name="lat1"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lon1" class="form-label">Longitude 1</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lon1"
+                name="lon1"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="lat2" class="form-label">Latitude 2</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lat2"
+                name="lat2"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lon2" class="form-label">Longitude 2</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lon2"
+                name="lon2"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="lat3" class="form-label">Latitude 3</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lat3"
+                name="lat3"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lon3" class="form-label">Longitude 3</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lon3"
+                name="lon3"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="lat4" class="form-label">Latitude 4</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lat4"
+                name="lat4"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lon4" class="form-label">Longitude 4</label>
+              <input
+                type="number"
+                step="0.000001"
+                class="form-control"
+                id="lon4"
+                name="lon4"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="charges" class="form-label">Charges</label>
+            <input
+              type="number"
+              step="0.01"
+              class="form-control"
+              id="charges"
+              name="charges"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Add Geofence</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
