@@ -3,70 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Geofence App</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <style>
+      body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        font-family: "Arial", sans-serif;
+      }
+      .hero {
+        height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        transition: 0.3s;
+        backdrop-filter: blur(10px);
+        width: 40vw;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3);
+      }
+      .btn-custom {
+        background: white;
+        color: #6a11cb;
+        border: none;
+      }
+      .btn-custom:hover {
+        background: #ddd;
+        color: black;
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="/">Geofence App</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/geofence/show">Show Geofences</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/geofence/add">Add Geofence</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Register User</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1 class="display-4">Automated, Infrastructure-less Toll Collection</h1>
+      <p class="lead">Using Advanced Geofencing Technology</p>
+    </div>
 
-    <div class="container mt-5">
-      <h1 class="text-center">
-        Welcome to <br />
-        'Automated, Infrastructure-less Toll Collection using Geofencing'
-      </h1>
-      <img src="./home.jpg" alt="" srcset="" />
-      <p class="text-center display-6">
-        Manage geofences, track tolls and monitor vehicle data with ease.
+    <!-- Main Content -->
+    <div class="container text-center my-5">
+      <p class="lead" style="margin-bottom: 100px">
+        Manage geofences, track tolls, and monitor vehicle data seamlessly.
       </p>
-      <div class="d-flex justify-content-center row">
-        <div class="col-6 border border-black p-5">
-          <p class="blockquote">Admin</p>
-          <a href="/geofence/add" class="btn btn-primary me-2">Add Geofence</a>
-          <a href="/geofence/show" class="btn btn-primary me-2"
-            >View Geofences</a
-          >
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card p-4 shadow">
+            <h3>Admin</h3>
+            <!-- <a href="#" class="btn btn-custom mt-3">Admin Login</a> -->
+            <a href="/geofence/show" class="btn btn-custom mt-3"
+              >show Geofence data</a
+            >
+            <a href="/geofence/show" class="btn btn-custom mt-3"
+              >Add Geofence data</a
+            >
+            <!-- <a href="#" class="btn btn-custom mt-3">Admin Login</a> -->
+          </div>
         </div>
-        <div class="col-6 border border-black p-5">
-          <p class="blockquote">User</p>
-          <a href="#" class="btn btn-success me-2">User Details</a>
-          <a href="#" class="btn btn-success me-2">Transaction History</a>
+        <div class="col-md-6">
+          <div class="card p-4 shadow">
+            <h3>User</h3>
+            <!-- <a href="/login" class="btn btn-custom mt-3">Login</a> -->
+            <!-- <a href="/register" class="btn btn-outline-light mt-3">Register</a> -->
+            <a href="/input" class="btn btn-custom mt-3"
+              >View Your Vehocle Info</a
+            >
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Bootstrap Bundle JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

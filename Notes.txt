@@ -1,0 +1,52 @@
+Create table => 
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password TEXT NOT NULL, -- Hashed password
+    wallet_balance DECIMAL(10,2) DEFAULT 0.00, -- Wallet starts with ₹0.00
+    due_amount DECIMAL(10,2) DEFAULT 0.00, -- Due amount starts with ₹0.00
+    vehicle_number VARCHAR(20) UNIQUE, -- Vehicle number must be unique
+    qr_code TEXT, -- Stores the QR code image URL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+POST http://localhost:8080/user/register
+
+json Payload: 
+
+{
+  "username": "JohnDoe",
+  "email": "johndoe@example.com",
+  "password": "Secure@123",
+  "vehicle_number": "MH12AB1234"
+}
+
+response: 
+
+{
+  "error": "Email or Vehicle number is already registered"
+}
+
+=======================================================================================================
+
+
+GET http://localhost:8080/user/info?email=johndoe@example.com
+
+response:
+
+{
+  "id": 1,
+  "username": "JohnDoe",
+  "email": "johndoe@example.com",
+  "password": "$2a$10$I8xreDwI6JwErdJJA5B33uPQYfXWPZWp/eRktcsKFPG5f7zCHArC.",
+  "wallet_balance": "0.00",
+  "due_amount": "0.00",
+  "vehicle_number": "MH12AB1234",
+  "qr_code": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAALVSURBVO3BQY7DVgwFwX6E7n/lziy5+oAg2YkZVsU/rDGKNUqxRinWKMUapVijFGuUYo1SrFGKNUqxRinWKMUapVijFGuUYo1y8VASvknljiR0Knck4ZtUnijWKMUapVijXLxM5U1JOEnCN6m8KQlvKtYoxRqlWKNcfFgS7lC5Q+UkCSdJ6FTuSMIdKp9UrFGKNUqxRrn4n0lCpzJJsUYp1ijFGuXixyWhUzlR6ZLQqfyyYo1SrFGKNcrFh6l8ksq/SeW/pFijFGuUYo1y8bIkfFMSOpVPSsJ/WbFGKdYoxRol/mGQJHQqXRJOVH5ZsUYp1ijFGuXioSR0Kl0SOpUuCZ1Kl4RO5U0qTyShUzlJQqfypmKNUqxRijXKxUMqdyShU+mS0Kl0SehU7lC5IwknKl0SOpVOpUtCp/JEsUYp1ijFGuXioSR0Kk+odEnoVLokdCp3JKFT6VROktCpdEk4UXlTsUYp1ijFGiX+4UVJ6FS6JJyonCShU+mS0Kk8kYROpUtCp3KShBOVJ4o1SrFGKdYoFw8l4QmVLgknKicqdyShU7lDpUvCHSpvKtYoxRqlWKPEP/ywJDyh0iWhU+mS0KmcJKFT6ZLQqTxRrFGKNUqxRrl4KAnfpNKpdEnoVLok3JGETuUOlW8q1ijFGqVYo1y8TOVNSbhDpUvCSRJOVLokdCpPqLypWKMUa5RijXLxYUm4Q+WOJHQqd6h0SeiS0KmcJKFT6ZJwovJEsUYp1ijFGuXix6l0SehU7lDpknCShCdU3lSsUYo1SrFGufhxSehU7khCp9KpdEl4QqVLQqfyRLFGKdYoxRrl4sNUPkmlS8KJSqdykoRO5YkkfFKxRinWKMUa5eJlSfimJHQqXRJOktCp3JGETqVLQqfSJeFNxRqlWKMUa5T4hzVGsUYp1ijFGqVYoxRrlGKNUqxRijVKsUYp1ijFGqVYoxRrlGKNUqxR/gGpMDHfDuoMLQAAAABJRU5ErkJggg==",
+  "created_at": "2025-04-03T16:13:09.965Z",
+  "updated_at": "2025-04-03T16:13:09.965Z"
+}

@@ -37,6 +37,49 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+// Route for registration page
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+// Route for login page
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.get("/profile", async (req, res) => {
+  try {
+    const user = JSON.parse(decodeURIComponent(req.query.user));
+
+    console.log("user: in profile", user);
+
+    // Render profile page with fetched data
+    res.render("profile", {
+      username: user.username,
+      email: user.email,
+      vehicle_number: user.vehicle_number,
+      wallet_balance: user.wallet_balance,
+      due_amount: user.due_amount,
+      qr_code: user.qr_code,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    });
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    res.status(500).send("Failed to fetch user information");
+  }
+});
+
+// Route for input page
+app.get("/input", (req, res) => {
+  res.render("input");
+});
+
+// Route for addMoney page
+app.get("/addMoney", (req, res) => {
+  res.render("addMoney");
+});
+
 // Routes
 app.use("/vehicle", vehicleRoutes);
 

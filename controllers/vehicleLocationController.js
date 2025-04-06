@@ -34,7 +34,8 @@ exports.recordVehicleLocation = async (req, res) => {
     let foundInGeofencedArea = false;
 
     // Step 1: Check if the vehicle number exists
-    let user = await userModel.getUserByVehicleNumber(vehicle_number);
+    let user = await userModel.getUserByEmailOrVehicle(vehicle_number);
+    console.log("user in vehical location", user);
     if (!user) {
       return res
         .status(404)
@@ -42,6 +43,7 @@ exports.recordVehicleLocation = async (req, res) => {
     }
 
     const tableName = `${vehicle_number}_history`;
+    console.log("table name: ", tableName);
 
     // Check if user is within a geofenced area
     const geofences = await geofenceModel.getAllGeofences();
@@ -63,7 +65,7 @@ exports.recordVehicleLocation = async (req, res) => {
     }
 
     if (foundInGeofencedArea) {
-      let balance = parseFloat(user.balance);
+      let balance = parseFloat(user.wallet_balance);
       let dueAmount = parseFloat(user.due_amount);
 
       if (charge > 0) {

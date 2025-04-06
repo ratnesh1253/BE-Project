@@ -2,16 +2,20 @@ const express = require("express");
 const { check } = require("express-validator");
 const userController = require("../controllers/userController");
 const validateUser = require("../utils/express-validator");
+const authenticate = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 // Route for user registration
 router.post("/register", validateUser, userController.registerUser);
 
-// Route for fetching user data
-router.get("/:vehicle_number", userController.getUserData);
+// Get user info route (by email or vehicle_number)
+router.get("/info", userController.getUserInfo);
+// router.get("/info", authenticate, userController.getUserInfo);
 
-// Route for updating balance and due amount
-router.put("/:vehicle_number/update-balance", userController.updateBalance);
+// Login user
+router.post("/login", userController.loginUser);
+
+router.post("/add-funds", userController.addFundsToWallet);
 
 module.exports = router;
