@@ -2,8 +2,19 @@ const geofenceModel = require("../models/geofenceModel");
 
 // Add a new geofence
 exports.addGeofence = async (req, res) => {
-  const { name, lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, charges } =
-    req.body;
+  const {
+    name,
+    lat1,
+    lon1,
+    lat2,
+    lon2,
+    lat3,
+    lon3,
+    lat4,
+    lon4,
+    charges,
+    adminId,
+  } = req.body;
 
   if (
     !name ||
@@ -15,7 +26,8 @@ exports.addGeofence = async (req, res) => {
     !lon3 ||
     !lat4 ||
     !lon4 ||
-    !charges
+    !charges ||
+    !adminId
   ) {
     return res.status(400).send("All fields are required.");
   }
@@ -32,6 +44,7 @@ exports.addGeofence = async (req, res) => {
       lat4,
       lon4,
       charges,
+      adminId,
     });
     req.flash("success", "Geofence added successfully!");
     // res.redirect("/geofence/show");
@@ -48,7 +61,7 @@ exports.addGeofence = async (req, res) => {
 exports.showGeofences = async (req, res) => {
   try {
     const geofences = await geofenceModel.getAllGeofences();
-    res.render("showGeofence", { geofences });
+    return geofences;
   } catch (err) {
     console.error("Error retrieving geofences:", err.message);
     res.status(500).send("An error occurred while retrieving geofences.");

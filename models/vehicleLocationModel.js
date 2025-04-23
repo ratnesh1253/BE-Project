@@ -1,4 +1,4 @@
-const pool = require("./db");
+import { pool } from "./db.js";
 
 // Function to get the latest entry from the vehicle_data table
 async function getLastEntry() {
@@ -50,7 +50,7 @@ const getVehicleHistory = async (tableName) => {
   return result.rows;
 };
 
-module.exports = {
+export {
   getLastEntry,
   insertVehicleData,
   getAllVehicleData,

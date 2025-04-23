@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const userModel = require("../models/userModel");
-const QRCode = require("qrcode");
 const jwt = require("jsonwebtoken");
 
 // Controller to handle user registration
@@ -11,12 +10,36 @@ exports.registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { username, email, password, vehicle_number } = req.body;
+  const {
+    email,
+    password,
+    phone_number,
+    vehicle_number,
+    first_name,
+    last_name,
+    address_line1,
+    city,
+    state,
+    country,
+    pin,
+  } = req.body;
 
   try {
-    // Check if vehicle_number is provided
-    if (!vehicle_number) {
-      return res.status(400).json({ message: "Vehicle number is required" });
+    // Validate required fields
+    if (
+      !email ||
+      !password ||
+      !phone_number ||
+      !vehicle_number ||
+      !first_name ||
+      !last_name ||
+      !address_line1 ||
+      !city ||
+      !state ||
+      !country ||
+      !pin
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     // Check if user already exists (by email or vehicle number)
@@ -33,18 +56,21 @@ exports.registerUser = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate QR code for the user (QR contains vehicle_number for payments)
-    const qrCodeUrl = await generateQRCode(vehicle_number);
-
     // Insert new user into the database
     const newUser = await userModel.insertUser({
-      username,
       email,
       password: hashedPassword,
+      phone_number,
       vehicle_number,
-      wallet_balance: 0.0, // Default balance
-      due_amount: 0.0, // Default due amount
-      qr_code: qrCodeUrl, // QR code URL
+      first_name,
+      last_name,
+      address_line1,
+      city,
+      state,
+      country,
+      pin,
+      wallet_balance: 0.0,
+      due_amount: 0.0,
     });
 
     // Create history table for this user's vehicle
@@ -58,19 +84,6 @@ exports.registerUser = async (req, res) => {
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-// Function to generate a QR code for a given vehicle number
-const generateQRCode = async (vehicle_number) => {
-  try {
-    // Generate QR code data URL (base64 format)
-    const qrCodeDataUrl = await QRCode.toDataURL(vehicle_number);
-
-    return qrCodeDataUrl; // Return the generated QR code image URL
-  } catch (error) {
-    console.error("Error generating QR code:", error);
-    throw error;
   }
 };
 
@@ -133,8 +146,6 @@ exports.loginUser = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        id: user.id,
-        username: user.username,
         email: user.email,
         vehicle_number: user.vehicle_number,
       },

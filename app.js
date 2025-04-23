@@ -3,17 +3,26 @@ const app = express();
 const port = 8080;
 const session = require("express-session");
 const flash = require("connect-flash");
+const cors = require("cors");
 
 // Import routes
 const vehicleRoutes = require("./routes/vehicleRoutes");
 const geofenceRoutes = require("./routes/geofenceRoutes");
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
 
 // Set EJS as the view engine
 app.set("view engine", "ejs");
+
+app.use(
+  cors({
+    origin: "*", // or use '*' for all origins (not recommended in production)
+    credentials: true, // if you're sending cookies or authentication headers
+  })
+);
 
 // Middleware to parse JSON data
 app.use(express.json());
@@ -33,59 +42,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.render("home");
-});
-
-// Route for registration page
-app.get("/register", (req, res) => {
-  res.render("register");
-});
-
-// Route for login page
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
-app.get("/profile", async (req, res) => {
-  try {
-    const user = JSON.parse(decodeURIComponent(req.query.user));
-
-    console.log("user: in profile", user);
-
-    // Render profile page with fetched data
-    res.render("profile", {
-      username: user.username,
-      email: user.email,
-      vehicle_number: user.vehicle_number,
-      wallet_balance: user.wallet_balance,
-      due_amount: user.due_amount,
-      qr_code: user.qr_code,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    });
-  } catch (error) {
-    console.error("Error fetching user info:", error);
-    res.status(500).send("Failed to fetch user information");
-  }
-});
-
-// Route for input page
-app.get("/input", (req, res) => {
-  res.render("input");
-});
-
-// Route for addMoney page
-app.get("/addMoney", (req, res) => {
-  res.render("addMoney");
-});
-
 // Routes
 app.use("/vehicle", vehicleRoutes);
 
 app.use("/geofence", geofenceRoutes);
 
 app.use("/user", userRoutes);
+
+app.use("/admin", adminRoutes);
 
 // Start the server
 app.listen(port, () => {

@@ -1,46 +1,23 @@
-const axios = require("axios");
+import { pool } from "./models/db.js"; // Note the .js extension is required in ES modules
+import bcrypt from "bcrypt";
 
-const vehicleNumber = "MH12AB1234"; // Make sure this matches what's in DB and route
-const url = `http://192.168.78.5:8080/${vehicleNumber}/location`;
+async function createAdmin() {
+  try {
+    const password = "admin@1234";
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-let baseTime = new Date("2025-04-03T11:31:00");
-let count = 0;
-const maxRequests = 7;
+    const query = `
+            INSERT INTO admin (first_name, last_name, email, password)
+            VALUES ('Ratnesh', 'Kshirsagar', 'admin@tollcollection.com', $1);
+        `;
 
-function sendData() {
-  if (count >= maxRequests) {
-    console.log("Finished sending all requests.");
-    return;
-  }
-
-  const payload = {
-    time: baseTime.toTimeString().slice(0, 8), // e.g. 11:31:00
-    latitude: 17.983009,
-    longitude: 74.492735,
-    speed: 60,
-  };
-
-  console.log(`Sending [${count + 1}/7] at time ${payload.time}`);
-
-  axios
-    .post(url, payload)
-    .then((response) => {
-      console.log(`✅ Success:`, response.data.message);
-    })
-    .catch((error) => {
-      if (error.response) {
-        console.error(`❌ Error:`, error.response.status, error.response.data);
-      } else {
-        console.error("❌ Error:", error.message);
-      }
-    });
-
-  baseTime.setMinutes(baseTime.getMinutes() + 1);
-  count++;
-
-  if (count < maxRequests) {
-    setTimeout(sendData, 5000);
+    await pool.query(query, [hashedPassword]);
+    console.log("Admin created successfully with hashed password");
+  } catch (error) {
+    console.error("Error creating admin:", error);
+  } finally {
+    await pool.end(); // Close the connection pool when done
   }
 }
 
-sendData();
+createAdmin();

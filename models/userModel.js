@@ -1,28 +1,44 @@
-const pool = require("./db");
+import { pool } from "./db.js";
 
 const insertUser = async (userData) => {
   const {
-    username,
+    phone_number,
     email,
     password,
     vehicle_number,
     wallet_balance,
     due_amount,
-    qr_code,
+    first_name,
+    last_name,
+    address_line1,
+    city,
+    state,
+    country,
+    pin,
   } = userData;
 
   try {
     const result = await pool.query(
-      `INSERT INTO users (username, email, password, vehicle_number, wallet_balance, due_amount, qr_code)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      `INSERT INTO users 
+       (phone_number, email, password, vehicle_number, wallet_balance, due_amount,
+        first_name, last_name, address_line1, city, state, country, pin)
+       VALUES ($1, $2, $3, $4, $5, $6, 
+               $7, $8, $9, $10, $11, $12, $13)
+       RETURNING *`,
       [
-        username,
+        phone_number,
         email,
         password,
         vehicle_number,
         wallet_balance,
         due_amount,
-        qr_code,
+        first_name,
+        last_name,
+        address_line1,
+        city,
+        state,
+        country,
+        pin,
       ]
     );
     return result.rows[0]; // Return the newly inserted user
@@ -118,7 +134,7 @@ const updateUserBalanceAndDue = async (vehicleNumber, balance, dueAmount) => {
 };
 
 // Export functions
-module.exports = {
+export {
   getUserByEmailOrVehicle,
   insertUser,
   createHistoryTable,

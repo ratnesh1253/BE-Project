@@ -2,16 +2,80 @@ Create table =>
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    phone_number VARCHAR(15) UNIQUE NOT NULL,
     password TEXT NOT NULL, -- Hashed password
     wallet_balance DECIMAL(10,2) DEFAULT 0.00, -- Wallet starts with ₹0.00
     due_amount DECIMAL(10,2) DEFAULT 0.00, -- Due amount starts with ₹0.00
-    vehicle_number VARCHAR(20) UNIQUE, -- Vehicle number must be unique
-    qr_code TEXT, -- Stores the QR code image URL
+    vehicle_number VARCHAR(20) UNIQUE NOT NULL, -- Vehicle number must be unique
+    address_line1 TEXT NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    pin VARCHAR(10) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE admin (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO admin (first_name, last_name, email, password)
+VALUES ('Ratnesh', 'Kshirsagar', 'admin@tollcollection.com', 'admin@1234');
+
+
+
+CREATE TABLE geofenced_data (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    lat1 NUMERIC(8,6) NOT NULL,
+    lon1 NUMERIC(8,6) NOT NULL,
+    lat2 NUMERIC(8,6) NOT NULL,
+    lon2 NUMERIC(8,6) NOT NULL,
+    lat3 NUMERIC(8,6) NOT NULL,
+    lon3 NUMERIC(8,6) NOT NULL,
+    lat4 NUMERIC(8,6) NOT NULL,
+    lon4 NUMERIC(8,6) NOT NULL,
+    charges NUMERIC(10,2) NOT NULL,
+    created_by INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_admin
+        FOREIGN KEY (created_by)
+        REFERENCES admin(id)
+        ON DELETE CASCADE
+);
+
+import { pool } from "./models/db.js"; // Note the .js extension is required in ES modules
+import bcrypt from "bcrypt";
+
+async function createAdmin() {
+  try {
+    const password = "admin@1234";
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const query = `
+            INSERT INTO admin (first_name, last_name, email, password)
+            VALUES ('Ratnesh', 'Kshirsagar', 'admin@tollcollection.com', $1);
+        `;
+
+    await pool.query(query, [hashedPassword]);
+    console.log("Admin created successfully with hashed password");
+  } catch (error) {
+    console.error("Error creating admin:", error);
+  } finally {
+    await pool.end(); // Close the connection pool when done
+  }
+}
+
+createAdmin();
 
 
 POST http://localhost:8080/user/register
