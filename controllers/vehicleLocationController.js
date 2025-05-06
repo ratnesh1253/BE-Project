@@ -11,6 +11,7 @@ exports.recordVehicleLocation = async (req, res) => {
 
   // Validate incoming data
   if (latitude === undefined || longitude === undefined) {
+    console.log("Missing required location data");
     return res.status(400).json({ error: "Missing required location data" });
   }
 
@@ -34,16 +35,16 @@ exports.recordVehicleLocation = async (req, res) => {
     let foundInGeofencedArea = false;
 
     // Step 1: Check if the vehicle number exists
-    let user = await userModel.getUserByEmailOrVehicle(vehicle_number);
-    console.log("user in vehical location", user);
+    // let user = await userModel.getUserByEmailOrVehicle(vehicle_number);
+    let user = await userModel.getUsersByVehicleNumber(vehicle_number);
     if (!user) {
+      console.log("Vehicle number not associated with any user");
       return res
         .status(404)
         .json({ error: "Vehicle number not associated with any user" });
     }
 
     const tableName = `${vehicle_number}_history`;
-    console.log("table name: ", tableName);
 
     // Check if user is within a geofenced area
     const geofences = await geofenceModel.getAllGeofences();
@@ -58,29 +59,29 @@ exports.recordVehicleLocation = async (req, res) => {
       ];
 
       if (pointInPolygon([latitude, longitude], polygon)) {
-        charge = parseFloat(geofence.charges); // User is within this geofence
+        charge = Number(geofence.charges);
         foundInGeofencedArea = true;
         break;
       }
     }
 
     if (foundInGeofencedArea) {
-      let balance = parseFloat(user.wallet_balance);
-      let dueAmount = parseFloat(user.due_amount);
+      let balance = Number(user[0].wallet_balance);
+      let dueAmount = Number(user[0].due_amount);
 
       if (charge > 0) {
         // Update user's balance or due amount
         if (balance >= charge) {
-          balance -= parseFloat(charge); // Deduct from balance
+          balance -= Number(charge); // Deduct from balance
         } else {
-          dueAmount += parseFloat(charge); // Add to due amount
+          dueAmount += Number(charge); // Add to due amount
         }
 
         // Update user data in the database
         await userModel.updateUserBalanceAndDue(
           vehicle_number,
-          balance,
-          dueAmount
+          Number(balance),
+          Number(dueAmount)
         );
       }
 
@@ -97,11 +98,15 @@ exports.recordVehicleLocation = async (req, res) => {
         }
       );
 
+      console.log("Location recorded inside geofence and charges applied");
+      console.log(locationData);
+
       return res.status(201).json({
         message: "Location recorded inside geofence and charges applied",
         data: locationData,
       });
     } else {
+      console.log("Location recorded outside geofence. Not Recorded!");
       return res.status(201).json({
         message: "Location recorded outside geofence",
       });
@@ -111,6 +116,7 @@ exports.recordVehicleLocation = async (req, res) => {
 
     // Handle table not existing
     if (error.message.includes("relation")) {
+      console.log(`Table ${vehicle_number}_history does not exist`);
       return res
         .status(404)
         .json({ error: `Table ${vehicle_number}_history does not exist` });

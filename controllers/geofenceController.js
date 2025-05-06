@@ -46,14 +46,19 @@ exports.addGeofence = async (req, res) => {
       charges,
       adminId,
     });
-    req.flash("success", "Geofence added successfully!");
-    // res.redirect("/geofence/show");
-    res.status(200).send("Geofence added successfully!");
+
+    res.status(200).json({
+      success: true,
+      message: "Geofence added successfully!",
+      data: result, // Include the created geofence data if needed
+    });
   } catch (err) {
     console.error("Error adding geofence:", err.message);
-    req.flash("error", "Failed to add geofence.");
-    // res.redirect("/geofence/show");
-    res.status(500).send("Failed to add geofence.");
+    res.status(500).json({
+      success: false,
+      message: "Failed to add geofence.",
+      error: err.message,
+    });
   }
 };
 
@@ -61,9 +66,60 @@ exports.addGeofence = async (req, res) => {
 exports.showGeofences = async (req, res) => {
   try {
     const geofences = await geofenceModel.getAllGeofences();
-    return geofences;
+    res.status(200).json(geofences);
   } catch (err) {
-    console.error("Error retrieving geofences:", err.message);
-    res.status(500).send("An error occurred while retrieving geofences.");
+    console.error("", err.message);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving geofences." });
+  }
+};
+
+// In your backend controller
+exports.updateGeofence = async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const result = await geofenceModel.updateGeofence(id, updateData);
+    res.status(200).json({
+      success: true,
+      message: "Geofence updated successfully!",
+      data: result,
+    });
+  } catch (err) {
+    console.error("Error updating geofence:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update geofence.",
+      error: err.message,
+    });
+  }
+};
+
+exports.deleteGeofence = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await geofenceModel.deleteGeofence(id);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Geofence not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Geofence deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting geofence:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete geofence",
+      error: err.message,
+    });
   }
 };

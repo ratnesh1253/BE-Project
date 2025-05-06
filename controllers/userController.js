@@ -106,8 +106,6 @@ exports.getUserInfo = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("user info in controller: ", user);
-
     return res.status(200).json(user);
   } catch (error) {
     console.error("Error fetching user info:", error);

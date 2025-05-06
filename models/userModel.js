@@ -51,18 +51,47 @@ const insertUser = async (userData) => {
 // Function to get user by email or vehicle number
 const getUserByEmailOrVehicle = async (email, vehicle_number) => {
   try {
-    const query = `
-      SELECT * FROM users 
-      WHERE email = COALESCE($1, email) OR vehicle_number = COALESCE($2, vehicle_number)
-    `;
+    let query = `SELECT * FROM users WHERE `;
+    const conditions = [];
+    const params = [];
 
-    const result = await pool.query(query, [
-      email || null,
-      vehicle_number || null,
-    ]);
+    if (email && vehicle_number) {
+      conditions.push(`email = $1 AND vehicle_number = $2`);
+      params.push(email, vehicle_number);
+    } else if (email) {
+      conditions.push(`email = $1`);
+      params.push(email);
+    } else if (vehicle_number) {
+      conditions.push(`vehicle_number = $1`);
+      params.push(vehicle_number);
+    } else {
+      return null;
+    }
+
+    query += conditions.join(" ");
+    query += ` LIMIT 1`;
+
+    const result = await pool.query(query, params);
     return result.rows[0] || null;
   } catch (error) {
     console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
+const getUsersByVehicleNumber = async (vehicle_number) => {
+  try {
+    if (!vehicle_number) return [];
+
+    const query = `
+      SELECT * FROM users 
+      WHERE vehicle_number = $1;
+    `;
+
+    const result = await pool.query(query, [vehicle_number]);
+    return result.rows; // returns an array of all matching rows
+  } catch (error) {
+    console.error("Error fetching users by vehicle number:", error);
     throw error;
   }
 };
@@ -141,4 +170,5 @@ export {
   getUserByEmail,
   updateUserBalance,
   updateUserBalanceAndDue,
+  getUsersByVehicleNumber,
 };
