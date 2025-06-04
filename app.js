@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const port = 8080;
-const session = require("express-session");
-const flash = require("connect-flash");
+// const session = require("express-session");
+// const flash = require("connect-flash");
 const cors = require("cors");
 
 // Import routes
@@ -15,7 +15,7 @@ const adminRoutes = require("./routes/adminRoutes");
 app.use(express.urlencoded({ extended: true }));
 
 // Set EJS as the view engine
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs");
 
 app.use(
   cors({
@@ -31,16 +31,16 @@ app.use(express.json());
 app.use(express.static("public"));
 
 //Middleware for flash messages
-app.use(
-  session({ secret: "your-secret", resave: false, saveUninitialized: true })
-);
-app.use(flash());
+// app.use(
+//   session({ secret: "your-secret", resave: false, saveUninitialized: true })
+// );
+// app.use(flash());
 
 // Set flash messages to res.locals
-app.use((req, res, next) => {
-  res.locals.messages = req.flash();
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.messages = req.flash();
+//   next();
+// });
 
 // Routes
 app.use("/vehicle", vehicleRoutes);
