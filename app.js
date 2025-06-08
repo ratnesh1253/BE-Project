@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 8080;
+require("dotenv").config();
+const port = process.env.PORT;
 // const session = require("express-session");
 // const flash = require("connect-flash");
 const cors = require("cors");
