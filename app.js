@@ -43,6 +43,10 @@ app.use(express.static("public"));
 //   next();
 // });
 
+app.get("/", (req, res) => {
+  res.send("✅ Hello from your EC2 Node.js server!");
+});
+
 // Routes
 app.use("/vehicle", vehicleRoutes);
 
