@@ -37,20 +37,12 @@ exports.recordVehicleLocation = async (req, res) => {
     // Step 1: Check if the vehicle number exists
     // let user = await userModel.getUserByEmailOrVehicle(vehicle_number);
     let user = await userModel.getUsersByVehicleNumber(vehicle_number);
-    // if (!user) {
-    //   console.log("Vehicle number not associated with any user");
-    //   return res
-    //     .status(404)
-    //     .json({ error: "Vehicle number not associated with any user" });
-    // }
-    const userData = user[0]; // safer and cleaner
-    if (!userData || userData.wallet_balance === undefined) {
-      console.log("Invalid user data format:", userData);
-      return res.status(500).json({ error: "Invalid user data" });
+    if (!user) {
+      console.log("Vehicle number not associated with any user");
+      return res
+        .status(404)
+        .json({ error: "Vehicle number not associated with any user" });
     }
-
-    let balance = Number(userData.wallet_balance);
-    let dueAmount = Number(userData.due_amount);
 
     const tableName = `${vehicle_number}_history`;
 
@@ -76,6 +68,8 @@ exports.recordVehicleLocation = async (req, res) => {
     if (foundInGeofencedArea) {
       let balance = Number(user[0].wallet_balance);
       let dueAmount = Number(user[0].due_amount);
+      console.log("balance:", balance);
+      console.log("dueAmount:", dueAmount);
 
       if (charge > 0) {
         // Update user's balance or due amount
