@@ -7,6 +7,7 @@ const { convertUTCToIST } = require("../utils/utils");
 // Controller to record vehicle location
 exports.recordVehicleLocation = async (req, res) => {
   const { vehicle_number } = req.params;
+  console.log("Vehicle number:", vehicle_number);
   let { time, latitude, longitude, speed } = req.body;
 
   // Validate incoming data
