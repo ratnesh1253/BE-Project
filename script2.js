@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const baseUrl = `http://localhost:8080/vehicle/MH12AB1234/location`;
+const baseUrl = `https://be-project-pyax.onrender.com/vehicle/MH12AB1234/location`;
 const coordinates = [
   { lat: "17.984614", lng: "74.473499" },
   { lat: "17.984097", lng: "74.475491" },
