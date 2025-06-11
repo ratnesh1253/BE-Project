@@ -37,7 +37,9 @@ exports.recordVehicleLocation = async (req, res) => {
 
     // Step 1: Check if the vehicle number exists
     // let user = await userModel.getUserByEmailOrVehicle(vehicle_number);
-    let user = await userModel.getUsersByVehicleNumber(vehicle_number);
+    let user = await userModel.getUsersByVehicleNumber(
+      vehicle_number.toUpperCase()
+    );
     console.log("User data:", user);
     if (!user) {
       console.log("Vehicle number not associated with any user");
